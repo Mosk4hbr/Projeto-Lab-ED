@@ -9,6 +9,7 @@ typedef struct Pessoa
     char vacina[10];         // nome da vacina que tomou na 1ª dose
     struct Pessoa *pprox;
 } TPessoa;
+
 typedef struct Cabeca
 {
     TPessoa *pY;
@@ -23,7 +24,8 @@ TCabeca *criaLista();
 void insereLista(TCabeca *pprim, FILE *p);
 int lerArquivoY(FILE *parquivo);
 void imprimeLista(TPessoa *p);
-TPessoa *alocaNo();
+TPessoa *alocaNo(FILE *parquivo);
+TPessoa *unificar(TPessoa *p1, TPessoa *p2, TCabeca *cabeca);
 
 int main()
 {
@@ -43,7 +45,7 @@ int main()
                 //p2 = fopen("postoZ.dat", "r");
             	int contY, contZ;
                 TPessoa *teste = NULL;
-            	//contY = lerArquivoY(p1);
+            	contY = lerArquivoY(p1);
             	//contZ = lerArquivoY(p2);
             	//printf("%d %d\n", contY, contZ);
                 insereLista(cabeca, p1);
@@ -58,13 +60,14 @@ int main()
 
 void insereLista(TCabeca *pprim, FILE *p)
 {
-    while(!feof(p))
+    while(!(feof(p)))
     {
         TPessoa *novo=alocaNo(p), *aux=NULL;
 	    if (novo == NULL) return;
         if(pprim->pY == NULL)
         {
-            pprim -> pY = novo;
+            pprim->pY = novo;
+            printf("Opa\n");
             return;
         }
 	    aux = pprim->pY;
@@ -77,10 +80,10 @@ void imprimeLista(TPessoa *p)
 {
 	if(p)
 	{
-		while(p!=NULL)//while(p)
+		while(p)//while(p)
 		{
 			printf("%s %d %d %d %s\n", p->nome, p->idade, p->dose1, p->dose2, p->vacina);
-			p = p->pprox;	
+			p = p->pprox;
 		}
 	}
 	else
@@ -88,6 +91,9 @@ void imprimeLista(TPessoa *p)
         printf("\nLista vazia!");
     }
 }
+
+
+
 TPessoa *alocaNo(FILE *parquivo)
 {
     TPessoa *novo = NULL;
@@ -95,6 +101,7 @@ TPessoa *alocaNo(FILE *parquivo)
     if(novo)
     {
         fscanf(parquivo, "%s %d %d %d %s\n", novo->nome, &novo->idade, &novo->dose1, &novo->dose2, novo->vacina);
+        printf("linha\n");
     }
     else
     {
@@ -132,7 +139,7 @@ TPessoa *unificar(TPessoa *p1, TPessoa *p2, TCabeca *cabeca)
   	}
 }
 
-/*int lerArquivoY(FILE *parquivo)
+int lerArquivoY(FILE *parquivo)
 {
     TPessoa *temp = NULL;
     temp = (TPessoa *)malloc(sizeof(TPessoa));
@@ -148,4 +155,4 @@ TPessoa *unificar(TPessoa *p1, TPessoa *p2, TCabeca *cabeca)
     free(temp);
     temp = NULL;
     return cont;
-}*/
+}
